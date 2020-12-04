@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <title>Cubes game</title>
+</head>
+<body>
+<h1 class="my-20 text-center text-xl font-semibold w-full">Cubes game</h1>
+<div class="options flex justify-around">
+    <div class="buttons w-6/12">
+        <button class="start rounded-xl bg-green-500 p-2 transition duration-300 hover:bg-purple-300 w-4/12 font-bold uppercase">Start</button>
+        <button class="new-game rounded-xl bg-red-400 p-2 w-4/12 transition duration-300 hover:bg-green-400 font-bold uppercase">New game</button>
+    </div>
+    <div class="times">
+        <input type="number" class="points" value="0" readonly>
+        <input type="text" class="left-time" value="01:00" readonly>
+    </div>
+</div>
+<div class="main-wrapper h-80 flex justify-center mt-20">
+    <div class="game-field w-6/12 bg-gray-400"></div>
+    <div class="result-field w-4/12 bg-red-200">
+        <h3 class="text-center text-xl font-semibold">Result</h3>
+        <ul>
+            <li></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
