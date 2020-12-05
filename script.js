@@ -1,27 +1,34 @@
+//Get all default elements from game
 const startBtn =document.querySelector('.start');
 const newGameBtn =document.querySelector('.new-game');
 const gameField =document.querySelector('.game-field');
+
+//Get game field coords
 const fieldCords = {x: gameField.offsetTop, y: gameField.offsetLeft};
-const cubeColors = [
-    "bg-blue",
-    "bg-green",
-    "bg-red"
+
+//Create cube types
+const cubeTypes = [
+    {type: 'point', color:"bg-blue"},
+    {type: 'time', color:"bg-green"},
+    {type: 'double-point', color:"bg-red"}
 ];
 
-const createCube = (tag = 'div', cordX = 0, cordY = 0, color = 'black') => {
+//Function for constructing cube node
+const createCube = (tag = 'div', cordX = 0, cordY = 0, color = 'black', dataArttr = 'point') => {
     const cube = document.createElement(tag);
     cube.style.top = `${cordY}px`;
     cube.style.left = `${cordX}px`;
     cube.className = `${cordY}px ${cordX}px ${color}-500 hover:${color}-400 ${color}-500 cursor-pointer transition absolute duration-100 hover:shadow-lg w-6 h-6`;
+    cube.dataset.type = dataArttr;
     return cube;
 };
 
+//Add function for getting rand item from array
 Array.prototype.randArrItem = function(){
     return this[Math.floor(Math.random()*this.length)];
 };
 
-console.log("Field is here: ", gameField.offsetHeight);
-
+//Get intervals for rand func considering game field
 const randInterval = {
     x: {
         min: 0,
@@ -33,13 +40,12 @@ const randInterval = {
     }
 };
 
+//Func for getting random int between two numbers
 const getRandomInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 };
-
-const getFieldSize = () => [gameField.width, gameField.height];
 
 const positionDetector = (children) => {
     return children.map((elem, i) => {
@@ -53,20 +59,29 @@ const positionDetector = (children) => {
     });
 };
 
+//Func for spawning cube in game field
 const cubeSpawner = (field) => {
     let randX = getRandomInt(randInterval.x.min, randInterval.x.max);
     let randY = getRandomInt(randInterval.y.min, randInterval.y.max);
-    let randColor = cubeColors.randArrItem();
-    field.appendChild(createCube('div', randX, randY, randColor));
+    let randType = cubeTypes.randArrItem();
+    field.appendChild(createCube('div', randX, randY, randType.color, randType.type));
 };
 
+//Listener for start button
 startBtn.addEventListener('click', () => {
-   cubeSpawner(gameField);
-   startBtn.innerHTML = 'Stop';
-   startBtn.classList.toggle('bg-green-800');
-   startBtn.classList.toggle('hover:bg-green-700');
-   startBtn.classList.add('bg-red-800');
-   startBtn.classList.add('hover:bg-red-700');
+    if (startBtn.innerHTML !== 'Pause') {
+        startBtn.innerHTML = 'Pause';
+        cubeSpawner(gameField);
+        startBtn.classList.toggle('bg-green-800');
+        startBtn.classList.toggle('hover:bg-green-700');
+        startBtn.classList.toggle('bg-yellow-800');
+        startBtn.classList.toggle('hover:bg-yellow-700');
+    } else {
+        startBtn.innerHTML = 'Start';
+        startBtn.classList.toggle('bg-green-800');
+        startBtn.classList.toggle('hover:bg-green-700');
+        startBtn.classList.toggle('bg-yellow-800');
+        startBtn.classList.toggle('hover:bg-yellow-700');
+    }
 });
-
 
