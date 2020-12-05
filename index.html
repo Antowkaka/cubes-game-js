@@ -7,25 +7,43 @@
     <title>Cubes game</title>
 </head>
 <body>
-<h1 class="my-20 text-center text-xl font-semibold w-full">Cubes game</h1>
-<div class="options flex justify-around">
-    <div class="buttons w-6/12">
-        <button class="start rounded-xl bg-green-500 p-2 transition duration-300 hover:bg-purple-300 w-4/12 font-bold uppercase">Start</button>
-        <button class="new-game rounded-xl bg-red-400 p-2 w-4/12 transition duration-300 hover:bg-green-400 font-bold uppercase">New game</button>
+<div class="container px-2">
+    <h1 class="my-20 text-center text-xl font-semibold w-full">Cubes game</h1>
+    <div class="options flex justify-center">
+        <div class="buttons w-4/12 flex justify-end">
+            <button class="start text-indigo-200 rounded-xl bg-green-800 p-2 transition duration-300 hover:bg-green-700 transform hover:scale-110 w-4/12 font-bold uppercase mx-2">Start</button>
+            <button class="new-game text-indigo-200 rounded-xl bg-blue-800 p-2 w-4/12 transition duration-300 hover:bg-blue-700 transform hover:scale-110 font-bold uppercase mx-2">New game</button>
+        </div>
+        <div class="records w-8/12 flex justify-center items-center">
+            <label for="points">
+                Score
+                <input id="points" type="number" class="points p-2 border-2 rounded-lg text-center mx-2" value="0" readonly>
+            </label>
+            <label for="time">
+                Time
+                <input id="time" type="text" class="left-time p-2 border-2 rounded-lg text-center mx-2" value="01:00" readonly>
+            </label>
+        </div>
     </div>
-    <div class="times">
-        <input type="number" class="points" value="0" readonly>
-        <input type="text" class="left-time" value="01:00" readonly>
-    </div>
-</div>
-<div class="main-wrapper h-80 flex justify-center mt-20">
-    <div class="game-field w-6/12 bg-gray-400"></div>
-    <div class="result-field w-4/12 bg-red-200">
-        <h3 class="text-center text-xl font-semibold">Result</h3>
-        <ul>
-            <li></li>
-        </ul>
+    <div class="main-wrapper h-80 flex justify-center mt-20">
+        <div class="game-field w-6/12 bg-opacity-30 mr-2 bg-indigo-300 shadow-inner shadow-lg relative"></div>
+        <div class="results w-4/12">
+            <div class="h-40 result-field bg-blue-300 shadow-inner shadow-lg">
+                <h3 class="text-center text-xl font-semibold uppercase">Results</h3>
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="explanation h-40 flex justify-center items-center bg-gray-500 shadow-inner shadow-lg">
+                <ul>
+                    <li class="text-indigo-100 text-md uppercase"><span class="blue-cube block w-6 h-6 bg-blue-500 float-left mr-2 transition duration-300 hover:shadow-lg hover:bg-blue-900"></span> - Убирается 1 кликом, даёт 1 очко</li>
+                    <li class="text-indigo-100 text-md uppercase mt-2"><span class="green-cube block w-6 h-6 bg-green-500 float-left mr-2 transition duration-300 hover:shadow-lg hover:bg-green-900"></span> - Убирается 1 кликом, даёт 1 очко, 5 секунд</li>
+                    <li class="text-indigo-100 text-md uppercase mt-2"><span class="red-cube block w-6 h-6 bg-red-500 float-left mr-2 transition duration-300 hover:shadow-lg hover:bg-red-900"></span> - Убирается 2 кликом, даёт 2 очко</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 </body>
+<script src="script.js"></script>
 </html>
