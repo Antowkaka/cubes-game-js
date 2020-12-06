@@ -2,6 +2,16 @@
 const startBtn =document.querySelector('.start');
 const newGameBtn =document.querySelector('.new-game');
 const gameField =document.querySelector('.game-field');
+const timer =document.querySelector('.time');
+const score =document.querySelector('.points');
+//Set start time
+let allSeconds = 60;
+
+//Catching our created cubes
+let cubesArray = [];
+
+//Create timer ID for stopping timer
+let timerID;
 
 //Get game field coords
 const fieldCords = {x: gameField.offsetTop, y: gameField.offsetLeft};
@@ -64,14 +74,16 @@ const cubeSpawner = (field) => {
     let randX = getRandomInt(randInterval.x.min, randInterval.x.max);
     let randY = getRandomInt(randInterval.y.min, randInterval.y.max);
     let randType = cubeTypes.randArrItem();
-    field.appendChild(createCube('div', randX, randY, randType.color, randType.type));
+    const newCube = createCube('div', randX, randY, randType.color, randType.type);
+    cubesArray.push(newCube);
+    field.appendChild(newCube);
+    addListener(newCube);
 };
 
-//Listener for start button
-startBtn.addEventListener('click', () => {
-    if (startBtn.innerHTML !== 'Pause') {
+//StartButton switcher
+const startBtnSwitcher = (name) => {
+    if (name === 'Pause') {
         startBtn.innerHTML = 'Pause';
-        cubeSpawner(gameField);
         startBtn.classList.toggle('bg-green-800');
         startBtn.classList.toggle('hover:bg-green-700');
         startBtn.classList.toggle('bg-yellow-800');
@@ -83,5 +95,81 @@ startBtn.addEventListener('click', () => {
         startBtn.classList.toggle('bg-yellow-800');
         startBtn.classList.toggle('hover:bg-yellow-700');
     }
-});
+};
 
+//Time controller func
+const timeController = () => {
+    return setInterval(() => {
+        allSeconds--;
+        let minutes = allSeconds >= 60 ? Math.floor(allSeconds / 60) : 0;
+        let sec = allSeconds > 60 ? allSeconds - 60 * minutes : allSeconds;
+        let tenInterval = minutes*allSeconds - sec;
+        if (0 < tenInterval && tenInterval < 10) {
+            sec = `0${sec}`;
+        }
+        timer.value =`0${minutes}:${sec}`;
+    }, 1000)
+};
+
+
+//Add listeners for our cubes
+const addListener = (cube) => {
+    if (cube.dataset.type === 'double-point') {
+        cube.addEventListener('dblclick', e => {
+            score.value = Number(score.value) + 2;
+            cube.remove();
+            for(let i = 0; i < 3; i++) {
+                cubeSpawner(gameField);
+            }
+        }, {once: true})
+    } else {
+        cube.addEventListener('click', (e) => {
+            console.log('Cube: ', e.target.dataset.type);
+            console.log('Hello');
+            switch (e.target.dataset.type) {
+                case 'point': {
+                    score.value++;
+                    cube.remove();
+                    for(let i = 0; i < 3; i++) {
+                        cubeSpawner(gameField);
+                    }
+                } break;
+                case 'time': {
+                    score.value++;
+                    allSeconds += 5;
+                    cube.remove();
+                    for(let i = 0; i < 3; i++) {
+                        cubeSpawner(gameField);
+                    }
+                } break;
+            }
+        }, {once: true})
+    }
+};
+
+//Paused cubes
+const pause = toggle => {
+    if (toggle) {
+        for (let child of gameField.children) {
+            child.classList.toggle('opacity-50');
+            child.disabled = true;
+        }
+    } else {
+        for (let child of gameField.children) {
+            child.classList.toggle('opacity-50');
+            child.disabled = false;
+        }
+    }
+};
+
+//Listener for start button
+startBtn.addEventListener('click', () => {
+    if (startBtn.innerHTML !== 'Pause') {
+        startBtnSwitcher('Pause');
+        cubeSpawner(gameField);
+        timerID = timeController();
+    } else {
+        startBtnSwitcher('Start');
+        clearInterval(timerID);
+    }
+});
