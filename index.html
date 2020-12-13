@@ -28,10 +28,10 @@
     <div class="main-wrapper h-80 flex justify-center mt-20">
         <div class="game-field w-6/12 bg-opacity-30 mr-2 bg-indigo-300 shadow-inner shadow-lg relative"></div>
         <div class="results w-4/12">
-            <div class="h-40 result-field bg-blue-300 shadow-inner shadow-lg">
+            <div class="h-40 bg-blue-300 shadow-inner shadow-lg overflow-x-auto">
                 <h3 class="text-center text-xl font-semibold uppercase">Results</h3>
-                <ul>
-                    <li></li>
+                <ul class="result-list pl-4">
+
                 </ul>
             </div>
             <div class="explanation h-40 flex justify-center items-center bg-gray-500 shadow-inner shadow-lg">
@@ -41,6 +41,19 @@
                     <li class="text-indigo-100 text-md uppercase mt-2"><span class="red-cube block w-6 h-6 bg-red-500 float-left mr-2 transition duration-300 hover:shadow-lg hover:bg-red-900"></span> - Убирается 2 кликом, даёт 2 очко</li>
                 </ul>
             </div>
+        </div>
+    </div>
+    <div class="popup-bg fixed">
+        <div class="popup fixed">
+            <label for="username" class="mx-auto text-indigo-200">
+                Your name:
+                <input id="username" type="text" class="text-black popup-username p-2 border-2 rounded-lg text-center mx-2 mt-2">
+            </label>
+            <label for="result" class="mx-auto text-indigo-200">
+                Your result:
+                <input id="result" type="text" class="text-black popup-result p-2 border-2 rounded-lg text-center mx-2 mt-2" readonly>
+            </label>
+            <button class="save text-indigo-200 rounded-xl bg-yellow-800 p-2 transition duration-300 hover:bg-green-700 transform hover:scale-110 w-4/12 font-bold uppercase mx-auto mt-2">Save</button>
         </div>
     </div>
 </div>

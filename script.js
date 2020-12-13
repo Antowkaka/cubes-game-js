@@ -2,10 +2,16 @@
 const startBtn =document.querySelector('.start');
 const newGameBtn =document.querySelector('.new-game');
 const gameField =document.querySelector('.game-field');
+const resultList = document.querySelector('.result-list');
 const timer =document.querySelector('.time');
 const score =document.querySelector('.points');
+const popup =document.querySelector('.popup');
+const popupBg =document.querySelector('.popup-bg');
+const saveBtn =document.querySelector('.save');
+const username =document.querySelector('.popup-username');
+const popupScore =document.querySelector('.popup-result');
 //Set start time
-let allSeconds = 60;
+let allSeconds = 3;
 
 //Catching our created cubes
 let cubesArray = [];
@@ -57,6 +63,17 @@ const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+//Popup controllers
+const showPopup = () => {
+    popupBg.className += ' bg-black opacity-90 right-0 bottom-0 w-screen h-screen z-10';
+    popup.className += ' mx-auto w-4/12 h-40 inset-64 z-20 bg-gray-800 flex flex-col rounded-md';
+};
+
+const hidePopup = () => {
+    popupBg.className = 'popup-bg fixed';
+    popup.className = 'popup fixed';
+};
+
 const positionDetector = (children) => {
     return children.map((elem, i) => {
         const cordX = elem.offsetTop - fieldCords.x;
@@ -74,6 +91,7 @@ const cubeSpawner = (field) => {
     let randX = getRandomInt(randInterval.x.min, randInterval.x.max);
     let randY = getRandomInt(randInterval.y.min, randInterval.y.max);
     let randType = cubeTypes.randArrItem();
+    if (allSeconds > 30 && randType.type === 'time') return;
     const newCube = createCube('div', randX, randY, randType.color, randType.type);
     cubesArray.push(newCube);
     field.appendChild(newCube);
@@ -97,6 +115,26 @@ const startBtnSwitcher = (name) => {
     }
 };
 
+//End controller function
+const endController = (type) => {
+    switch (type.name) {
+        case 'time': {
+            popupScore.value = score.value;
+            showPopup();
+            startBtnSwitcher('Start');
+            clearInterval(timerID);
+        } break;
+        case 'popup': {
+            const timeKey = new Date(Date.now()).toLocaleString('ru-RU', {timeZone: 'Europe/Kiev'});
+            localStorage.setItem(timeKey, JSON.stringify({
+                name: username.value,
+                result: popupScore.value
+            }));
+            hidePopup();
+        } break;
+    }
+};
+
 //Time controller func
 const timeController = () => {
     return setInterval(() => {
@@ -108,9 +146,21 @@ const timeController = () => {
             sec = `0${sec}`;
         }
         timer.value =`0${minutes}:${sec}`;
+        if (allSeconds === 0) {
+            endController({name: 'time'});
+        }
     }, 1000)
 };
 
+//Add start listener
+document.addEventListener('DOMContentLoaded', () => {
+    localStorage.length !== 0 && Object.keys(localStorage).forEach(key => {
+        const userRow = document.createElement('li');
+        const userFromStorage = JSON.parse(localStorage.getItem(key));
+        userRow.innerHTML = `${userFromStorage.name} : ${userFromStorage.result}`;
+        resultList.appendChild(userRow);
+    })
+}, {once: true});
 
 //Add listeners for our cubes
 const addListener = (cube) => {
@@ -166,10 +216,15 @@ const pause = toggle => {
 startBtn.addEventListener('click', () => {
     if (startBtn.innerHTML !== 'Pause') {
         startBtnSwitcher('Pause');
-        cubeSpawner(gameField);
+        for(let i = 0; i < 5; i++) cubeSpawner(gameField);
         timerID = timeController();
     } else {
         startBtnSwitcher('Start');
         clearInterval(timerID);
     }
+});
+
+//Listener for save button
+saveBtn.addEventListener('click', (event) => {
+    endController({name: 'popup'});
 });
